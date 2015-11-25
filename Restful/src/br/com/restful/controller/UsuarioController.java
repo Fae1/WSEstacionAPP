@@ -3,6 +3,7 @@ package br.com.restful.controller;
 import java.util.ArrayList;
 
 import br.com.restful.dao.UsuarioDAO;
+import br.com.restful.model.Log;
 import br.com.restful.model.Usuario;
 
 /**
@@ -26,8 +27,15 @@ public class UsuarioController {
 			String dataNasc, String celular, String sexo, String senha){
 		return UsuarioDAO.getInstance().cadastrarUsuario(nome, sobrenome, email, cpf, cnh, dataNasc, celular, sexo, senha);
 	}
-	
+	//nome, sobrenome, email, cpf, cnh, dataNasc, celular, sexo, senha
 	public Usuario fornecerInfo(String email){
 		return UsuarioDAO.getInstance().fornecerInfo(email);
 	}
+	public String inserirCredito(String id, String valor){
+		return UsuarioDAO.getInstance().inserirCredito(id, valor);
+	}
+	
+	public ArrayList<Log> consultarHistorico(String idUsuario){
+		return UsuarioDAO.getInstance().consultarHistorico(idUsuario);
+	};
 }

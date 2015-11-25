@@ -3,6 +3,7 @@ package br.com.restful.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import br.com.restful.factory.ConnectionFactory;
@@ -71,6 +72,28 @@ public class VagaDAO extends ConnectionFactory {
 			fecharConexao(conexao, pstmt, rs);
 		}
 		return vagas;
+	}
+	
+	public float consultarValorHora(){
+		Connection conexao = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		float valorHora = 0;
+		
+		conexao = criarConexao();
+		try {
+			pstmt = conexao.prepareStatement("select Valor_Hora from vaga where idVaga = 1");
+			rs = pstmt.executeQuery();
+			rs.next();
+			valorHora = rs.getFloat("Valor_Hora");
+		} catch (SQLException e) {
+			System.out.println("ERROR: " + e);
+			e.printStackTrace();
+		} finally{
+			fecharConexao(conexao, pstmt, rs);
+		}
+		
+		return valorHora;
 	}
 	
 }

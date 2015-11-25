@@ -62,6 +62,18 @@ public class ConnectionFactory {
 			// TODO: handle exception
 		}
 	}
+	public void fecharConexao(Connection conexao, PreparedStatement pstmt){
+		try {
+			if (conexao != null){
+				conexao.close();
+			}
+			if (pstmt != null){
+				pstmt.close();
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
 	
 	
 }

@@ -2,18 +2,13 @@ package br.com.restful.resource;
 
 import java.util.ArrayList;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 
 import br.com.restful.controller.UsuarioController;
+import br.com.restful.model.Log;
 import br.com.restful.model.Usuario;
 
 /**
@@ -27,20 +22,13 @@ import br.com.restful.model.Usuario;
 @Path("/usuario")
 
 public class UsuarioResource {
-	@Context
-	private HttpServletRequest request;
-	private HttpSession session = null;
 	/**
 	 * 
 	 * Metodo responsavel por fazer chamada ao controller
 	 * 
 	 * @return ArrayList<Usuario>
 	 */
-	
-	public boolean verificarSessao(){
-		return false;
-		
-	}
+
 	
 	@GET
 	@Path("/listarTodos")
@@ -62,9 +50,6 @@ public class UsuarioResource {
 		
 	    if (usuarioLogado != null){
 	    	System.out.println("Bichão memo.");
-	    	session = request.getSession(true);
-	    	session.setAttribute("email", usuarioLogado.getEmail());
-	    	
 	    }
 	    else{
 	    	System.out.println("Senha ou email de usuario incorretos.");
@@ -72,35 +57,67 @@ public class UsuarioResource {
 	    return usuarioLogado;
 	}
 	
+	@GET
+	@Path("/inserirCredito/{id}/{valor}")
+	@Produces("application/json")
 	
+	public String inserirCredito(@PathParam("id") String id, @PathParam("valor") String valor){
+		String retorno;
+		retorno = new UsuarioController().inserirCredito(id, valor);
+	    return retorno;
+	}
 	
-	@POST
-	@Path("/cadastrarUsuario")
-	@Produces("aplication/json")
-	@Consumes(value = "aplication/json")
+	@GET
+	@Path("/cadastrarUsuario/"
+			+ "{nome}/"
+			+ "{sobrenome}/"
+			+ "{email}/"
+			+ "{cpf}/"
+			+ "{cnh}/"
+			+ "{dataNasc}/"
+			+ "{celular}/"
+			+ "{sexo}/"
+			+ "{senha}")
+	@Produces("application/json")
+
 	
-	public Usuario cadastrarUsuario(@FormParam("nome") String nome, @FormParam("sobrenome") String sobrenome, @FormParam("email") String email,
-			@FormParam("cpf") String cpf, @FormParam("cnh") String cnh,@FormParam("dataNasc") String dataNasc, @FormParam("celular") String celular,
-			@FormParam("sexo") String sexo, @FormParam("senha")String senha){
-		
+	public Usuario cadastrarUsuario(@PathParam("nome") String nome, 
+			@PathParam("sobrenome") String sobrenome, 
+			@PathParam("email") String email,
+			@PathParam("cpf") String cpf, 
+			@PathParam("cnh") String cnh,
+			@PathParam("dataNasc") String dataNasc, 
+			@PathParam("celular") String celular,
+			@PathParam("sexo") String sexo,
+			@PathParam("senha") String senha) 
+			{
+		System.out.println("Novo cadastro de user");
 		return new UsuarioController().cadastrarUsuario(nome, sobrenome, email, cpf, cnh, dataNasc, celular, sexo, senha);
 	}
 	
 	@GET
-	@Path("/fornecerInfo")
+	@Path("/fornecerInfo/{email}")
 	@Produces("application/json")
 	
-	public Usuario fornecerInfo(){
-		String emailLogado = null;
+	public Usuario fornecerInfo(@PathParam("email") String email){
 		Usuario usuario = null;
-		if(session.equals(true)){
-			emailLogado = (String) session.getAttribute("email");
-			usuario = new UsuarioController().fornecerInfo(emailLogado);
-		}
+		usuario = new UsuarioController().fornecerInfo(email);
 		return usuario;
 	}
 	
 	@GET
+	@Path("/consultarHistorico/"
+			+ "{idUsuario}")
+	@Produces("application/json")
+	
+	public ArrayList<Log> consultarHistorico(@PathParam("idUsuario") String idUsuario) 
+			{
+		System.out.println("Solicitação de historico.");
+		return new UsuarioController().consultarHistorico(idUsuario);
+	}
+	
+	
+	/*@GET
 	@Path("/fornecerInfo")
 	@Produces("application/json")
 	
@@ -110,6 +127,6 @@ public class UsuarioResource {
 			session.invalidate();;
 		}
 		return usuario;
-	}
+	}*/
 	
 }
